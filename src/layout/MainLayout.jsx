@@ -1,47 +1,55 @@
-import React, { useState } from 'react';
-import NavBar from '../components/NavBar';
-import SideBar from '../components/SideBar';
-import { Box, Toolbar } from '@mui/material';
+import React, { useState } from "react";
+import NavBar from "../components/common/NavBar";
+import SideBar from "../components/common/SideBar";
+import { Box, Toolbar } from "@mui/material";
+import { Outlet } from "react-router-dom";
 
 const drawerWidth = 240;
 
-const MainLayout = ({ children }) => {
-  // 1. Create the state to track if the mobile drawer is open
+export default function MainLayout() {
+
   const [mobileOpen, setMobileOpen] = useState(false);
 
-  // 2. Create the toggle function
   const handleDrawerToggle = () => {
     setMobileOpen(!mobileOpen);
   };
 
   return (
-    <Box sx={{ display: 'flex' }}>
-      {/* 3. Pass the toggle function to NavBar */}
-      <NavBar handleDrawerToggle={handleDrawerToggle} />
+    <Box sx={{ display: "flex" }}>
 
-      {/* 4. Pass the state AND the function to SideBar */}
-      <SideBar 
-        mobileOpen={mobileOpen} 
-        handleDrawerToggle={handleDrawerToggle} 
+      {/* Sidebar */}
+      <SideBar
+        mobileOpen={mobileOpen}
+        handleDrawerToggle={handleDrawerToggle}
       />
 
+      {/* Content */}
       <Box
-        component="main"
         sx={{
           flexGrow: 1,
-          p: 3,
-          bgcolor: '#F8FAFC',
-          minHeight: '100vh',
-          // 5. Ensure the main content shifts correctly on desktop
-          width: { sm: `calc(100% - ${drawerWidth}px)` },
-          ml: { sm: `${drawerWidth}px` }
+          ml: { sm: `${drawerWidth}px` },   // 👈 reserve sidebar space on desktop
+          width: "100%",
         }}
       >
-        <Toolbar /> 
-        {children}
+
+        <NavBar handleDrawerToggle={handleDrawerToggle} />
+
+        <Box
+          component="main"
+          sx={{
+            px: { xs: 2, sm: 3 },
+            py: 3,
+            minHeight: "100vh",
+            bgcolor: "background.default",
+            overflowX: "hidden",
+          }}
+        >
+          <Toolbar />
+          <Outlet />
+        </Box>
+
       </Box>
+
     </Box>
   );
-};
-
-export default MainLayout;
+}
